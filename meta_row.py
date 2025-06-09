@@ -22,7 +22,8 @@ class MetaRow:
     Category: str
 
     def __init__(self, row: dict):
-        if not isinstance(row, dict) or self.__annotations__.keys() != row.keys():
+        if not isinstance(row, dict) or not self.__annotations__.keys() <= row.keys():
+
             raise RuntimeError(f"ERROR: wrong row {row}")
         for key, typ in self.__annotations__.items():
             if key.startswith("__"):

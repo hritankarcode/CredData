@@ -112,13 +112,15 @@ def _get_source_gen(meta_path: Union[Path]) -> Generator[dict, None, None]:
     yield from source_gen(meta_path)
 
 
+
 def read_meta(meta_dir: Union[str, Path]) -> List[MetaRow]:
-    """Returns list of MetaRow read from file or directory. The same approach may be used to obtain a dict."""
+    """Returns list of MetaRow read from file or directory."""
     meta = []
     meta_ids = set()
 
     for row in _get_source_gen(Path(meta_dir)):
-        meta_row = MetaRow(row)
+        filtered_row = {k: row[k] for k in MetaRow.__annotations__.keys()}  # filter out extra fields
+        meta_row = MetaRow(filtered_row)
         if meta_row.Id in meta_ids:
             raise RuntimeError(f"ERROR: duplicate Id row {row}")
         meta_ids.add(meta_row.Id)
